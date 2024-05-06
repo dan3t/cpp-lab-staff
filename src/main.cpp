@@ -5,6 +5,10 @@
 #include "Manager.h"
 #include "Personal.h"
 
+#include <iostream>
+
+using namespace std;
+
 int main() {
 
     return 0;
