@@ -14,9 +14,13 @@ public:
 
     virtual int calc_bonus_salary(int bonus = 0) = 0;
 
-    virtual int calc_base_salary(int salaryValue, int workTimeValue) = 0;
-};
+    void set_bonus(int value) { bonus = value; }
 
+    virtual int calc_base_salary(int salaryValue, int workTimeValue) = 0;
+
+protected:
+    int bonus = 0;
+};
 class Project_Budget {
 public:
     virtual ~Project_Budget() = default;;

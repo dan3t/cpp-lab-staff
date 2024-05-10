@@ -5,12 +5,18 @@
 
 class Engineer : public Personal, public Project_Budget {
 public:
-    Engineer(int id, std::string name, int work_time, Positions positions, int salary, Project project) :
+    Engineer(int id, std::string name, int work_time, Positions position, int salary, Project project) :
             Personal(id, std::move(name), work_time, position, salary), project(project) {};
+
+    int calc_budget_part() override;
+
+    int calc_pro_additions(int bonus = 2) override = 0;
 
     int calc_bonus_salary(int bonus) override;
 
-    void print_info() override;
+    void print_info() const override;
+
+    void calc_salary() override;
 
     int calc_base_salary(int salary, int work_time_salary) override;
 
@@ -27,6 +33,7 @@ public:
 };
 
 class Tester : public Engineer {
+public:
     Tester(int id, std::string name, int work_time, Positions position, int salary, Project project) :
             Engineer(id, std::move(name), work_time, position, salary, project) {};
 
@@ -34,6 +41,7 @@ class Tester : public Engineer {
 };
 
 class TeamLeader : public Programmer, public Heading {
+public:
     TeamLeader(int id, std::string name, int work_time, Positions position, int salary, Project project) :
             Programmer(id, std::move(name), work_time, position, salary, project) {};
 

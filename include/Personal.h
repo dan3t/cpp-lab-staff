@@ -14,19 +14,18 @@ public:
             Employee(id, std::move(name), work_time, position),
             salary(salary) {};
 
-    void print_info() override;
+    void print_info() const override;
 
     int calc_base_salary(int salary, int work_time) override;
 
+    int calc_bonus_salary(int bonus) override;
 protected:
     int salary;
 };
 
 class Driver : public Personal {
 public:
-    Driver(int id, std::string name,
-           int work_time, Positions position, int salary) : Personal(id, std::move(name), work_time,
-                                                                     position, salary) {}
+    using Personal::Personal;
 
     void calc_salary() override;
 
@@ -35,9 +34,7 @@ public:
 
 class Cleaner : public Personal {
 public:
-    Cleaner(int id, std::string name,
-            int work_time, Positions position, int salary) : Personal(id, std::move(name), work_time, position,
-                                                                      salary) {}
+    using Personal::Personal;
 
     void calc_salary() override;
 };

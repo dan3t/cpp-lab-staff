@@ -1,49 +1,45 @@
-//
-// Created by denis on 17.04.2024.
-//
-
-#define STAFF_DATA_SIZE 3
-#define PROJECT_DATA_SIZE 3
-
 #include "Factory.h"
 #include "Manager.h"
+#include "Engineer.h"
 
-std::vector<const Employee *> StaffFactory::hireStaff(const std::string &staff_path, const std::string &project_path) {
-
+std::vector<Employee *> StaffFactory::hireStaff(const std::string &personal_path, const std::string &managers_path,
+                                                      const std::string &engineers_path, const std::string &projects_path) {
     // Hash Table "string -> enum"
 
     std::unordered_map<std::string, Positions> map = {
-            {"programmer", programmer},
-            {"team_leader", team_leader},
+            {"programmer",      programmer},
+            {"team_leader",     team_leader},
             {"project_manager", project_manager},
-            {"senior_manager", senior_manager},
-            {"cleaner", cleaner},
-            {"driver", driver},
-            {"tester", driver}
+            {"senior_manager",  senior_manager},
+            {"cleaner",         cleaner},
+            {"driver",          driver},
+            {"tester",          tester}
     };
-
     // Data
 
-    std::vector<const Employee *> staff;
+    std::vector<Employee *> staff;
     std::vector<const Project *> projects;
 
     std::string line;
+    std::string buffer;
 
     // Project parsing
 
-    std::ifstream in_project(project_path);
+    std::fstream in_project(projects_path);
 
     if (in_project.is_open()) {
         while (std::getline(in_project, line)) {
+
             std::istringstream iss(line);
-            std::string buffer;
-            std::vector<std::string> data(PROJECT_DATA_SIZE);
+            std::vector<std::string> row;
+
             while (iss >> buffer) {
-                data.push_back(buffer);
+                row.push_back(buffer);
             }
-            const int id = std::stoi(data[0]);
-            const int budget = std::stoi(data[1]);
-            const int number_of_employees = std::stoi(data[2]);
+
+            const int id = std::stoi(row[0]);
+            const int budget = std::stoi(row[1]);
+            const int number_of_employees = std::stoi(row[2]);
 
             // Add project to vector
 
@@ -53,44 +49,132 @@ std::vector<const Employee *> StaffFactory::hireStaff(const std::string &staff_p
     }
 
     in_project.close();
+    line.clear();
+    buffer.clear();
 
-    // Staff parsing
+    // Manager parsing
 
-    std::ifstream in_staff(staff_path);
-    if (in_staff.is_open()) {
-        while (std::getline(in_staff, line)) {
+    std::fstream f_managers(managers_path);
+
+    if (f_managers.is_open()) {
+        while (std::getline(f_managers, line)) {
+
             std::istringstream iss(line);
-            std::string buffer;
-            std::vector<std::string> data(STAFF_DATA_SIZE);
+            std::vector<std::string> row;
+
             while (iss >> buffer) {
-                data.push_back(buffer);
+                row.push_back(buffer);
             }
-            const int id = std::stoi(data[0]);
-            const std::string name = data[1] + data[2] + data[3];
-            Positions position = map[data[4]];
-            // TODO: checkpoint, убрать переменные за скоуп, коммит
+
+            const int id = std::stoi(row[0]);
+            const std::string name = row[1] + ' ' + row[2] + ' ' + row[3];
+            const Positions position = map[row[4]];
+            Employee* employee;
             switch (position) {
-                case project_manager:
-                    int project_id = std::stoi(data[5]);
-                    const Project* project = findProject(projects, project_id);
-                    const ProjectManager* project_manager = new ProjectManager(id, name, 0, position, *project);
-                    staff.push_back(project_manager);
+                case project_manager: {
+                    const int project_id = std::stoi(row[5]);
+                    const Project *project = findProject(projects, project_id);
+                    employee = new ProjectManager(id, name, 0, position, {project});
                     break;
-                case senior_manager:
-                    const SeniorManager* senior_manager = new SeniorManager(id, name, 0, position, projects);
-                    staff.push_back(senior_manager);
+                }
+                case senior_manager: {
+                    employee = new SeniorManager(id, name, 0, position, projects);
                     break;
-                default:
-                    break;
+                }
             }
+
+            staff.push_back(employee);
         }
     }
-    in_staff.close();
+
+    f_managers.close();
+    line.clear();
+    buffer.clear();
+
+    // Engineers Path
+
+    std::fstream f_engineers(engineers_path);
+
+    if (f_engineers.is_open()) {
+        while (std::getline(f_engineers, line)) {
+
+            std::istringstream iss(line);
+            std::vector<std::string> row;
+
+            while (iss >> buffer) {
+                row.push_back(buffer);
+            }
+
+            const int id = std::stoi(row[0]);
+            const std::string name = row[1] + ' ' + row[2] + ' ' + row[3];
+            const Positions position = map[row[4]];
+            const int project_id = std::stoi(row[5]);
+            const int salary = std::stoi(row[6]);
+
+            const Project* project = findProject(projects, project_id);
+            Employee* employee;
+
+            switch (position) {
+                case programmer:
+                    employee = new Programmer(id, name, 0, position, salary, *project);
+                    break;
+                case tester:
+                    employee = new Tester(id, name, 0, position, salary, *project);
+                    break;
+                case team_leader:
+                    employee = new TeamLeader(id, name, 0, position, salary, *project);
+                    break;
+            }
+
+            staff.push_back(employee);
+        }
+    }
+
+    f_engineers.close();
+    line.clear();
+    buffer.clear();
+
+    // Personal Path
+
+    std::fstream f_personal(personal_path);
+
+    if (f_personal.is_open()) {
+        while (std::getline(f_personal, line)) {
+
+            std::istringstream iss(line);
+            std::vector<std::string> row;
+
+            while (iss >> buffer) {
+                row.push_back(buffer);
+            }
+
+            const int id = std::stoi(row[0]);
+            const std::string name = row[1] + ' ' + row[2] + ' ' + row[3];
+            const Positions position = map[row[4]];
+            const int salary = std::stoi(row[5]);
+
+            Employee* employee;
+
+            switch (position) {
+                case driver:
+                    employee = new Driver(id, name, 0, position, salary);
+                    break;
+                case cleaner:
+                    employee = new Cleaner(id, name, 0, position, salary);
+                    break;
+            }
+
+            staff.push_back(employee);
+        }
+    }
+
+    f_personal.close();
+
 
     return staff;
 }
 
-const Project *StaffFactory::findProject(std::vector<const Project *> projects, int id) {
+const Project *StaffFactory::findProject(const std::vector<const Project *> &projects, int id) {
     for (auto project : projects) {
         if (project->get_id() == id) {
             return project;

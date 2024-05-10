@@ -1,0 +1,12 @@
+0	Burtsev Roman Andreevich	programmer	1	800
+1	Vargin Dmitry Alexandrovich	tester	1	600
+2	Gerasimov Alexey Alexandrovich	programmer	2	800
+3	Grachev Alexander Yevgenyevich	tester	2	900
+4	Dolgopolov Alexey Gennadievich	team_leader	2	500
+5	Maria Ivanovna Smirnova	programmer	3	700
+6	Alexander Petrovich Sokolov	tester	3	800
+7	Ekaterina Dmitriyevna Popova	programmer	3	800
+8	Dmitry Alexandrovich Ivanov	team_leader	3	700
+9	Mikhail Ivanovich Kuznetsov	programmer	0	700
+10	Anastasia Sergeyevna Egorova	tester	0	500
+11	Anna Vladimirovna Nikitina	team_leader	1	600

@@ -39,24 +39,23 @@ public:
             id(id), name(std::move(name)),
             work_time(work_time), position(position) {}
 
+    void set_work_time(int time);
+
     virtual void calc_salary() = 0;
 
-    virtual void print_info() = 0;
+    virtual void print_info() const = 0;
+
+    Positions get_position() const;
+
+    std::string get_position_print() const;
 
 private:
     int id;
 protected:
     Positions position;
-    int payment;
+    int payment = 0;
     int work_time;
     std::string name;
-    std::vector<std::string> enum_print = {"programmer",
-                                           "team_leader",
-                                           "project_manager",
-                                           "senior_manager",
-                                           "cleaner",
-                                           "driver",
-                                           "tester"};
 };
 
 #endif  // INCLUDE_EMPLOYEE_H_

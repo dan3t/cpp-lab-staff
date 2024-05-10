@@ -1,0 +1,5 @@
+12	Votinova Ksenia Konstantinovna	project_manager	1
+13	Pavel Alekseevich Belov	project_manager	2
+14	Yulia Mikhailovna Petrovna	senior_manager	ALL
+15	Svetlana Ivanovna Romanova	project_manager	3
+16	Anton Sergeevich Volkov	project_manager	0
